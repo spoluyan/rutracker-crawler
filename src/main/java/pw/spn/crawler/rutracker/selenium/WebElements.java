@@ -1,11 +1,11 @@
-package pw.spn.crawler.rutracker;
+package pw.spn.crawler.rutracker.selenium;
 
 import org.openqa.selenium.By;
 
 public interface WebElements {
-    String BASE_URL = "http://rutracker.org";
-    String TOPIC_BASE_URL = BASE_URL + "/forum/viewtopic.php?t=";
-    String DOWNLOAD_BASE_URL = BASE_URL + "/forum/dl.php?t=";
+    String BASE_URL_TRACKER = "http://rutracker.org";
+    String BASE_URL_TOPIC = BASE_URL_TRACKER + "/forum/viewtopic.php?t=";
+    String BASE_URL_DOWNLOAD = BASE_URL_TRACKER + "/forum/dl.php?t=";
 
     By CSS_SELECTOR_LOGGED_IN = By.cssSelector("span.logged-in-as-cap");
     By CSS_SELECTOR_LOGIN_LINK = By.cssSelector("span.a-like.bold");
