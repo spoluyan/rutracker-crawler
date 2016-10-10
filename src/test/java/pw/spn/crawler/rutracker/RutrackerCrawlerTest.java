@@ -9,13 +9,19 @@ import static org.junit.Assert.assertThat;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import pw.spn.crawler.rutracker.model.RutrackerLink;
 import pw.spn.crawler.rutracker.model.RutrackerTopic;
 
 public class RutrackerCrawlerTest {
-    private RutrackerCrawler testSubject = new RutrackerCrawler("crawler123", "123");
+    private static RutrackerCrawler testSubject;
+
+    @BeforeClass
+    public static void setup() {
+        testSubject = new RutrackerCrawler("crawler123", "123");
+    }
 
     @Test
     public void search_validData_listOfRutrackerLinksReturned() {

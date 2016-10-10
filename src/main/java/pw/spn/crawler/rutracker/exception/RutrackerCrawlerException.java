@@ -6,4 +6,8 @@ public class RutrackerCrawlerException extends RuntimeException {
     public RutrackerCrawlerException(String message) {
         super(message);
     }
+
+    public RutrackerCrawlerException(Throwable e) {
+        super(e);
+    }
 }
