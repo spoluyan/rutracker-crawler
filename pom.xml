@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pw.spn</groupId>
 	<artifactId>rutracker-crawler</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>RuTracker Crawler</name>
 	<description>Library for search and download torrents from rutracker.org.</description>
 	<url>https://github.com/spoluyan/rutracker-crawler</url>
