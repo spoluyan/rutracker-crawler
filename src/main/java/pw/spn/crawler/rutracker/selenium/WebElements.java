@@ -12,6 +12,7 @@ public interface WebElements {
     By CSS_SELECTOR_SEARCH_RESULTS = By.cssSelector("table.forumline.tablesorter > tbody > tr");
     By CSS_SELECTOR_LINK_INSIDE_COLUMN = By.cssSelector("div > a");
     By CSS_SELECTOR_PAGINATION_LINK = By.cssSelector("a.pg");
+    By CSS_SELECTOR_TOPICS = By.cssSelector("table.forums a[href^=\"viewforum.php?f=\"]");
 
     By ID_LOGIN = By.id("top-login-uname");
     By ID_PWD = By.id("top-login-pwd");

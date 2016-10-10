@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.Test;
 
 import pw.spn.crawler.rutracker.model.RutrackerLink;
+import pw.spn.crawler.rutracker.model.RutrackerTopic;
 
 public class RutrackerCrawlerTest {
     private RutrackerCrawler testSubject = new RutrackerCrawler("crawler123", "123");
@@ -17,10 +18,21 @@ public class RutrackerCrawlerTest {
     @Test
     public void search_validData_listOfRutrackerLinksReturned() {
         // given
-        String query = "deadpool";
+        String query = "ubuntu";
 
         // when
         List<RutrackerLink> result = testSubject.search(query);
+
+        // then
+        assertThat(result, is(not(empty())));
+    }
+
+    @Test
+    public void getTopics_listOfRutrackerTopicsReturned() {
+        // given
+
+        // when
+        List<RutrackerTopic> result = testSubject.getTopics();
 
         // then
         assertThat(result, is(not(empty())));

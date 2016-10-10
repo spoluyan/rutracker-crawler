@@ -1,6 +1,7 @@
 package pw.spn.crawler.rutracker.selenium;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import pw.spn.crawler.rutracker.exception.RutrackerCrawlerException;
+import pw.spn.crawler.rutracker.model.RutrackerTopic;
 
 public class RutrackerSeleniumService {
     private static final int WAIT_TIMEOUT_IN_SECONDS = 5;
@@ -64,5 +66,18 @@ public class RutrackerSeleniumService {
         List<WebElement> rowColumns = resultRow.findElements(WebElements.TAG_TD);
         return rowColumns.get(1).findElement(WebElements.TAG_SPAN).getAttribute(WebElements.ATTR_CLASS)
                 .contains(WebElements.ATTR_CLASS_APPROVED_VALUE);
+    }
+
+    public List<RutrackerTopic> loadTopics() {
+        return webDriver.findElements(WebElements.CSS_SELECTOR_TOPICS).stream().map(this::mapRutrackerTopic)
+                .collect(Collectors.toList());
+    }
+
+    private RutrackerTopic mapRutrackerTopic(WebElement topicLink) {
+        String href = topicLink.getAttribute(WebElements.ATTR_HREF);
+        int topicId = Integer.parseInt(href.substring(href.indexOf("?f=") + 3));
+        String topicName = topicLink.getText();
+        RutrackerTopic topic = new RutrackerTopic(topicId, topicName);
+        return topic;
     }
 }

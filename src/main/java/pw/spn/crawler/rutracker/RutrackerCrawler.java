@@ -16,6 +16,7 @@ import pw.spn.crawler.rutracker.selenium.WebElements;
 public class RutrackerCrawler {
     private final WebDriver webDriver;
     private final RutrackerSeleniumService rutrackerSeleniumService;
+    private final List<RutrackerTopic> topics;
 
     public RutrackerCrawler(String login, String password) {
         this(new HtmlUnitDriver(true), login, password);
@@ -25,6 +26,7 @@ public class RutrackerCrawler {
         this.webDriver = webDriver;
         this.rutrackerSeleniumService = new RutrackerSeleniumService(webDriver);
         rutrackerSeleniumService.login(login, password);
+        topics = rutrackerSeleniumService.loadTopics();
     }
 
     public List<RutrackerLink> search(String query) {
@@ -43,6 +45,10 @@ public class RutrackerCrawler {
         }
         return searchResultTable.stream().filter(rutrackerSeleniumService::isTorrentApproved).map(this::mapResultRow)
                 .collect(Collectors.toList());
+    }
+
+    public List<RutrackerTopic> getTopics() {
+        return topics;
     }
 
     private RutrackerLink mapResultRow(WebElement resultRow) {
