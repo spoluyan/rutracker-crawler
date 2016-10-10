@@ -1,10 +1,12 @@
 package pw.spn.crawler.rutracker;
 
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -25,6 +27,20 @@ public class RutrackerCrawlerTest {
 
         // then
         assertThat(result, is(not(empty())));
+    }
+
+    @Test
+    public void search_validDataWithTopicsIds_listOfRutrackerLinksReturned() {
+        // given
+        String query = "ubuntu";
+        int[] topicIds = new int[] { 1379, 1570 };
+
+        //when
+        List<RutrackerLink> result = testSubject.search(query, topicIds);
+
+        //then
+        assertThat(result, is(not(empty())));
+        result.forEach(link -> assertThat(Arrays.binarySearch(topicIds, link.getTopic().getId()), is(greaterThan(-1))));
     }
 
     @Test

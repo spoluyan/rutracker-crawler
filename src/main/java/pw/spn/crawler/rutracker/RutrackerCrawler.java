@@ -1,9 +1,12 @@
 package pw.spn.crawler.rutracker;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -30,12 +33,26 @@ public class RutrackerCrawler {
     }
 
     public List<RutrackerLink> search(String query) {
+        return search(query, null);
+    }
+
+    public List<RutrackerLink> search(String query, int... rutrackerTopicsIds) {
+        if (rutrackerTopicsIds == null || rutrackerTopicsIds.length == 0) {
+            rutrackerTopicsIds = new int[] { -1 };
+        }
+        List<RutrackerLink> result = new ArrayList<>();
+        Arrays.stream(rutrackerTopicsIds).forEach(topicId -> result.addAll(search(query, topicId)));
+        return result;
+    }
+
+    private List<RutrackerLink> search(String query, int topicId) {
         if (query == null || query.trim().length() == 0) {
             return Collections.emptyList();
         }
         webDriver.findElement(WebElements.ID_SEARCH_BTN).click();
         rutrackerSeleniumService.waitForLoad();
         rutrackerSeleniumService.goToAdvancedSearchPage();
+        webDriver.findElement(By.cssSelector(WebElements.CSS_SELECTOR_TOPIC_PREFIX + topicId)).click();
         webDriver.findElement(WebElements.ID_TITLE_SEARCH).sendKeys(query);
         webDriver.findElement(WebElements.ID_SEARCH_SUBMIT_BTN).click();
         rutrackerSeleniumService.waitForLoad();
