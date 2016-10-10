@@ -29,7 +29,9 @@ public class RutrackerHttpService {
     private static final String COOKIE = "Cookie";
     private static final String CONTENT_ENCODING = "Content-Encoding";
     private static final String GZIP = "gzip";
-    private static final String CONTENT_TYPE_VALUE = "application/x-www-form-urlencoded";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String CONTENT_TYPE_FORM_VALUE = "application/x-www-form-urlencoded";
+    private static final String CONTENT_TYPE_TORRENT_VALUE = "application/x-bittorrent";
     private static final String CSS_SELECTOR_TOPICS = "table.forums a[href^=\"viewforum.php?f=\"]";
     private static final String CSS_SELECTOR_SEARCH_RESULTS = "table.forumline.tablesorter > tbody > tr";
 
@@ -50,7 +52,8 @@ public class RutrackerHttpService {
     public void login(String username, String password) {
         String query = "login_username=" + username + "&login_password=" + password + "&login=%C2%F5%EE%E4";
         try {
-            RequestBody requestBody = RequestBody.create(MediaType.parse(CONTENT_TYPE_VALUE), query.getBytes(ENCODING));
+            RequestBody requestBody = RequestBody.create(MediaType.parse(CONTENT_TYPE_FORM_VALUE),
+                    query.getBytes(ENCODING));
             Response response = httpClient.newCall(new Request.Builder().url(LOGIN_URL).post(requestBody).build())
                     .execute();
             if (response.isRedirect()) {
@@ -83,7 +86,7 @@ public class RutrackerHttpService {
     public Elements search(String query, int topicId) {
         String queryParams = "f=" + topicId + "&nm=" + query;
         try {
-            RequestBody requestBody = RequestBody.create(MediaType.parse(CONTENT_TYPE_VALUE),
+            RequestBody requestBody = RequestBody.create(MediaType.parse(CONTENT_TYPE_FORM_VALUE),
                     queryParams.getBytes(ENCODING));
             Response response = httpClient
                     .newCall(new Request.Builder().url(SEARCH_URL).header(COOKIE, cookies).post(requestBody).build())
@@ -107,6 +110,21 @@ public class RutrackerHttpService {
             logger.error("Unable to parse search results.");
         } finally {
             closeInputStream(html);
+        }
+        return null;
+    }
+
+    public byte[] downloadFile(String url) {
+        try {
+            Response response = httpClient.newCall(new Request.Builder().url(url).header(COOKIE, cookies).get().build())
+                    .execute();
+            if (response.isSuccessful() && response.header(CONTENT_TYPE) != null
+                    && response.header(CONTENT_TYPE).contains(CONTENT_TYPE_TORRENT_VALUE)) {
+                return response.body().bytes();
+            }
+            logger.error("Invalid response from url {}.", url);
+        } catch (IOException e) {
+            logger.error("Unable to download file.", e);
         }
         return null;
     }

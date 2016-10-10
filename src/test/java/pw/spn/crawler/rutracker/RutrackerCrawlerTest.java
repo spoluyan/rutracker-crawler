@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -96,5 +98,30 @@ public class RutrackerCrawlerTest {
 
         // then
         assertThat(result, is(not(empty())));
+    }
+
+    @Test
+    public void downloadTorrent_validData_bytesReturned() {
+        // given
+        String downloadUrl = testSubject.search("ubuntu").get(0).getDownloadUrl();
+
+        // when
+        byte[] result = testSubject.downloadTorrent(downloadUrl);
+
+        // then
+        assertThat(result, is(notNullValue()));
+        assertThat(result.length, is(greaterThan(0)));
+    }
+
+    @Test
+    public void downloadTorrent_invalidUrl_nullReturned() {
+        // given
+        String downloadUrl = "http://rutracker.org/";
+
+        // when
+        byte[] result = testSubject.downloadTorrent(downloadUrl);
+
+        // then
+        assertThat(result, is(nullValue()));
     }
 }

@@ -1,7 +1,5 @@
 package pw.spn.crawler.rutracker;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -106,11 +104,6 @@ public class RutrackerCrawler {
         if (downloadUrl == null) {
             throw new RutrackerCrawlerException("downloadUrl can not be null");
         }
-        try {
-            URL downloadURL = new URL(downloadUrl);
-        } catch (MalformedURLException e) {
-            throw new RutrackerCrawlerException("Invalid url " + downloadUrl);
-        }
-        return null;
+        return httpService.downloadFile(downloadUrl);
     }
 }

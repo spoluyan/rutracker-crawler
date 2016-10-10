@@ -29,5 +29,5 @@ Main logic is implemented in `pw.spn.crawler.livelib.RutrackerCrawler` class. Ju
 ## Current implemented operations
 
 * Search torrents in all topics (only first 50 results)
-* Search torrents in specific topics (only first 50 results)
+* Search torrents in specific topics (only first 50 results for each topic)
 * Download torrent files
