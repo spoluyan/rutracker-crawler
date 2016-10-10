@@ -44,6 +44,44 @@ public class RutrackerCrawlerTest {
     }
 
     @Test
+    public void search_validDataWithNullTopicsIds_listOfRutrackerLinksReturned() {
+        // given
+        String query = "ubuntu";
+        int[] topicIds = null;
+
+        // when
+        List<RutrackerLink> result = testSubject.search(query, topicIds);
+
+        // then
+        assertThat(result, is(not(empty())));
+        assertThat(result.stream().mapToInt(link -> link.getTopic().getId()).distinct().count(), is(greaterThan(2L)));
+    }
+
+    @Test
+    public void search_emptyQuery_emptyListReturned() {
+        // given
+        String query = "   ";
+
+        // when
+        List<RutrackerLink> result = testSubject.search(query);
+
+        // then
+        assertThat(result, is(empty()));
+    }
+
+    @Test
+    public void search_noResults_emptyListReturned() {
+        // given
+        String query = "dalsdksladklfdj";
+
+        // when
+        List<RutrackerLink> result = testSubject.search(query);
+
+        // then
+        assertThat(result, is(empty()));
+    }
+
+    @Test
     public void getTopics_listOfRutrackerTopicsReturned() {
         // given
 
