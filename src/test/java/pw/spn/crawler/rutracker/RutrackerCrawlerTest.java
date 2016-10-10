@@ -14,6 +14,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import pw.spn.crawler.rutracker.exception.RutrackerCrawlerException;
 import pw.spn.crawler.rutracker.model.RutrackerLink;
 import pw.spn.crawler.rutracker.model.RutrackerTopic;
 
@@ -123,5 +124,17 @@ public class RutrackerCrawlerTest {
 
         // then
         assertThat(result, is(nullValue()));
+    }
+
+    @Test(expected = RutrackerCrawlerException.class)
+    public void downloadTorrent_nullUrl_exceptionIsThrown() {
+        // given
+        String downloadUrl = null;
+
+        // when
+        testSubject.downloadTorrent(downloadUrl);
+
+        // then
+        // exception is thrown
     }
 }
