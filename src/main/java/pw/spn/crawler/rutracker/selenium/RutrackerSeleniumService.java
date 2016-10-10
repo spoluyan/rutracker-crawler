@@ -1,8 +1,8 @@
 package pw.spn.crawler.rutracker.selenium;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import pw.spn.crawler.rutracker.exception.RutrackerCrawlerException;
-import pw.spn.crawler.rutracker.model.RutrackerTopic;
 
 public class RutrackerSeleniumService {
     private static final int WAIT_TIMEOUT_IN_SECONDS = 5;
@@ -68,16 +67,18 @@ public class RutrackerSeleniumService {
                 .contains(WebElements.ATTR_CLASS_APPROVED_VALUE);
     }
 
-    public List<RutrackerTopic> loadTopics() {
-        return webDriver.findElements(WebElements.CSS_SELECTOR_TOPICS).stream().map(this::mapRutrackerTopic)
-                .collect(Collectors.toList());
+    public List<WebElement> performSearch(String query, int topicId) {
+        webDriver.findElement(WebElements.ID_SEARCH_BTN).click();
+        waitForLoad();
+        goToAdvancedSearchPage();
+        webDriver.findElement(By.cssSelector(WebElements.CSS_SELECTOR_TOPIC_PREFIX + topicId)).click();
+        webDriver.findElement(WebElements.ID_TITLE_SEARCH).sendKeys(query);
+        webDriver.findElement(WebElements.ID_SEARCH_SUBMIT_BTN).click();
+        waitForLoad();
+        return webDriver.findElements(WebElements.CSS_SELECTOR_SEARCH_RESULTS);
     }
 
-    private RutrackerTopic mapRutrackerTopic(WebElement topicLink) {
-        String href = topicLink.getAttribute(WebElements.ATTR_HREF);
-        int topicId = Integer.parseInt(href.substring(href.indexOf("?f=") + 3));
-        String topicName = topicLink.getText();
-        RutrackerTopic topic = new RutrackerTopic(topicId, topicName);
-        return topic;
+    public List<WebElement> loadTopics() {
+        return webDriver.findElements(WebElements.CSS_SELECTOR_TOPICS);
     }
 }
