@@ -79,6 +79,8 @@ public class RutrackerSeleniumService {
     }
 
     public List<WebElement> loadTopics() {
+        webDriver.get(WebElements.BASE_URL_TRACKER);
+        waitForLoad();
         return webDriver.findElements(WebElements.CSS_SELECTOR_TOPICS);
     }
 }

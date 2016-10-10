@@ -10,6 +10,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.WebClient;
+
+import pw.spn.crawler.rutracker.exception.RutrackerCrawlerException;
 import pw.spn.crawler.rutracker.model.RutrackerLink;
 import pw.spn.crawler.rutracker.model.RutrackerTopic;
 import pw.spn.crawler.rutracker.selenium.RutrackerSeleniumService;
@@ -20,7 +24,14 @@ public class RutrackerCrawler {
     private final List<RutrackerTopic> topics;
 
     public RutrackerCrawler(String login, String password) {
-        this(new HtmlUnitDriver(true), login, password);
+        this(new HtmlUnitDriver(true) {
+            @Override
+            protected WebClient newWebClient(BrowserVersion version) {
+                WebClient webClient = super.newWebClient(version);
+                webClient.getOptions().setThrowExceptionOnScriptError(false);
+                return webClient;
+            }
+        }, login, password);
     }
 
     public RutrackerCrawler(WebDriver webDriver, String login, String password) {
@@ -40,6 +51,13 @@ public class RutrackerCrawler {
         List<RutrackerLink> result = new ArrayList<>();
         Arrays.stream(rutrackerTopicsIds).forEach(topicId -> result.addAll(search(query, topicId)));
         return result;
+    }
+
+    public byte[] downloadTorrent(String downloadUrl) {
+        if (downloadUrl == null) {
+            throw new RutrackerCrawlerException("downloadUrl can not be null");
+        }
+        return null;
     }
 
     private List<RutrackerLink> search(String query, int topicId) {
