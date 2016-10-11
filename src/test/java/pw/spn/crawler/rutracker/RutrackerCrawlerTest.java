@@ -42,7 +42,7 @@ public class RutrackerCrawlerTest {
     public void search_validDataWithTopicsIds_listOfRutrackerLinksReturned() {
         // given
         String query = "ubuntu";
-        int[] topicIds = new int[] { 1379, 1570 };
+        Integer[] topicIds = new Integer[] { 1379, 1570 };
 
         //when
         List<RutrackerLink> result = testSubject.search(query, topicIds);
@@ -56,7 +56,7 @@ public class RutrackerCrawlerTest {
     public void search_validDataWithNullTopicsIds_listOfRutrackerLinksReturned() {
         // given
         String query = "ubuntu";
-        int[] topicIds = null;
+        Integer[] topicIds = null;
 
         // when
         List<RutrackerLink> result = testSubject.search(query, topicIds);

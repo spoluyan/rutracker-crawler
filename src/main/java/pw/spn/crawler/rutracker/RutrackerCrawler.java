@@ -1,7 +1,5 @@
 package pw.spn.crawler.rutracker;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -53,20 +51,14 @@ public class RutrackerCrawler {
         return search(query, null);
     }
 
-    public List<RutrackerLink> search(String query, int... rutrackerTopicsIds) {
-        if (rutrackerTopicsIds == null || rutrackerTopicsIds.length == 0) {
-            rutrackerTopicsIds = new int[] { -1 };
-        }
-        List<RutrackerLink> result = new ArrayList<>();
-        Arrays.stream(rutrackerTopicsIds).forEach(topicId -> result.addAll(search(query, topicId)));
-        return result;
-    }
-
-    private List<RutrackerLink> search(String query, int topicId) {
+    public List<RutrackerLink> search(String query, Integer[] rutrackerTopicsIds) {
         if (query == null || query.trim().length() == 0) {
             return Collections.emptyList();
         }
-        Elements searchResultElements = httpService.search(query, topicId);
+        if (rutrackerTopicsIds == null || rutrackerTopicsIds.length == 0) {
+            rutrackerTopicsIds = new Integer[] { -1 };
+        }
+        Elements searchResultElements = httpService.search(query, rutrackerTopicsIds);
         if (searchResultElements.size() == 0
                 || (searchResultElements.size() == 1 && searchResultElements.get(0).select(TAG_TD).size() == 1)) {
             return Collections.emptyList();
