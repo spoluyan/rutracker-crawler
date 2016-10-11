@@ -2,6 +2,7 @@ package pw.spn.crawler.rutracker.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -83,8 +84,9 @@ public class RutrackerHttpService {
         return new Elements();
     }
 
-    public Elements search(String query, int topicId) {
-        String queryParams = "f=" + topicId + "&nm=" + query;
+    public Elements search(String query, Integer[] topicIds) {
+        String queryParams = "f=" + Arrays.stream(topicIds).map(String::valueOf).collect(Collectors.joining(","))
+                + "&nm=" + query;
         try {
             RequestBody requestBody = RequestBody.create(MediaType.parse(CONTENT_TYPE_FORM_VALUE),
                     queryParams.getBytes(ENCODING));
