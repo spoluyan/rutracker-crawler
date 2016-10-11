@@ -1,4 +1,4 @@
-# RuTracker crawler v1.0.0
+# RuTracker crawler v1.1.0
 
 [![Build Status](https://travis-ci.org/spoluyan/rutracker-crawler.svg?branch=master)](https://travis-ci.org/spoluyan/rutracker-crawler)
 [![Coverage Status](https://coveralls.io/repos/github/spoluyan/rutracker-crawler/badge.svg)](https://coveralls.io/github/spoluyan/rutracker-crawler)
@@ -19,7 +19,7 @@ Add to your `pom.xml`
   <dependency>
     <groupId>pw.spn</groupId>
     <artifactId>rutracker-crawler</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
   </dependency>
 </dependencies>
 ```
