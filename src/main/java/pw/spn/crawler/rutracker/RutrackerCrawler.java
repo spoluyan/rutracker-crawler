@@ -4,10 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import pw.spn.crawler.rutracker.exception.RutrackerCrawlerException;
 import pw.spn.crawler.rutracker.http.RutrackerHttpService;
 import pw.spn.crawler.rutracker.model.RutrackerLink;
@@ -16,12 +14,18 @@ import pw.spn.crawler.rutracker.model.RutrackerTopic;
 public class RutrackerCrawler {
     private static final String TAG_TD = "td";
     private static final String TAG_SPAN = "span";
-    private static final String TAG_U = "u";
-    private static final String TAG_B = "b";
     private static final String CLASS_APPROVED = "tor-approved";
     private static final String ATTR_HREF = "href";
+    private static final String DATA_TS_TEXT= "data-ts_text";
     private static final String ATTR_ABS_HREF = "abs:href";
     private static final String CSS_SELECTOR_A_IN_DIV = "div > a";
+
+    private static final int TD_APPROVED_INFO_INDEX = 1;
+    private static final int TD_TOPIC_INFO_INDEX = 2;
+    private static final int TD_NAME_INFO_INDEX = 3;
+    private static final int TD_FILE_SIZE_INFO_INDEX = 5;
+    private static final int TD_SEEDS_INFO_INDEX = 6;
+    private static final int TD_LEECHES_INFO_INDEX = 7;
 
     private final RutrackerHttpService httpService = new RutrackerHttpService();
     private final List<RutrackerTopic> topics;
@@ -56,7 +60,7 @@ public class RutrackerCrawler {
             return Collections.emptyList();
         }
         if (rutrackerTopicsIds == null || rutrackerTopicsIds.length == 0) {
-            rutrackerTopicsIds = new Integer[] { -1 };
+            rutrackerTopicsIds = new Integer[]{-1};
         }
         Elements searchResultElements = httpService.search(query, rutrackerTopicsIds);
         if (searchResultElements.size() == 0
@@ -67,26 +71,32 @@ public class RutrackerCrawler {
                 .collect(Collectors.toList());
     }
 
+
     private RutrackerLink mapElementToRutrackerLink(Element element) {
         Elements tds = element.select(TAG_TD);
-        boolean approved = tds.get(1).select(TAG_SPAN).hasClass(CLASS_APPROVED);
+        boolean approved = tds.get(TD_APPROVED_INFO_INDEX).select(TAG_SPAN).hasClass(CLASS_APPROVED);
         if (!approved) {
             return null;
         }
-        Element topicInfo = tds.get(2).select(CSS_SELECTOR_A_IN_DIV).first();
+        Element topicInfo = tds.get(TD_TOPIC_INFO_INDEX).select(CSS_SELECTOR_A_IN_DIV).first();
         RutrackerTopic topic = mapElementToRutrackerTopic(topicInfo);
-        Element nameInfo = tds.get(3).select(CSS_SELECTOR_A_IN_DIV).first();
+        Element nameInfo = tds.get(TD_NAME_INFO_INDEX).select(CSS_SELECTOR_A_IN_DIV).first();
         String title = nameInfo.text();
         String url = nameInfo.attr(ATTR_ABS_HREF);
         String downloadUrl = url.replace("viewtopic", "dl");
-        long sizeInBytes = Long.parseLong(tds.get(5).select(TAG_U).first().text());
-        int seeds = Integer.parseInt(tds.get(6).select(TAG_U).first().text());
-        if (seeds < 0) {
-            seeds = 0;
-        }
-        int leechs = Integer.parseInt(tds.get(7).select(TAG_B).first().text());
-        return new RutrackerLink(topic, title, url, downloadUrl, sizeInBytes, seeds, leechs);
+
+        String sizeInBytesStr = tds.get(TD_FILE_SIZE_INFO_INDEX).attr(DATA_TS_TEXT);
+        long sizeInBytes = Long.parseLong(sizeInBytesStr);
+
+        String seedsStr = tds.get(TD_SEEDS_INFO_INDEX).attr(DATA_TS_TEXT);
+        int seeds = Math.max(Integer.parseInt(seedsStr), 0);
+
+        String leechesRowStr = tds.get(TD_LEECHES_INFO_INDEX).text();
+        int leeches = Integer.parseInt(leechesRowStr);
+
+        return new RutrackerLink(topic, title, url, downloadUrl, sizeInBytes, seeds, leeches);
     }
+
 
     public List<RutrackerTopic> getTopics() {
         return topics;
