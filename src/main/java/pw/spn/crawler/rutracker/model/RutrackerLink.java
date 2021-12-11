@@ -7,18 +7,18 @@ public class RutrackerLink {
     private final String downloadUrl;
     private final long sizeInBytes;
     private final int seeds;
-    private final int leechs;
+    private final int leeches;
 
     public RutrackerLink(RutrackerTopic topic, String title, String url, String downloadUrl, long sizeInBytes,
             int seeds,
-            int leechs) {
+            int leeches) {
         this.topic = topic;
         this.title = title;
         this.url = url;
         this.downloadUrl = downloadUrl;
         this.sizeInBytes = sizeInBytes;
         this.seeds = seeds;
-        this.leechs = leechs;
+        this.leeches = leeches;
     }
 
     public RutrackerTopic getTopic() {
@@ -45,7 +45,7 @@ public class RutrackerLink {
         return seeds;
     }
 
-    public int getLeechs() {
-        return leechs;
+    public int getLeeches() {
+        return leeches;
     }
 }
